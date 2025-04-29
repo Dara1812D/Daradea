@@ -419,44 +419,53 @@ In summary, Dara Employment Agency, LLC is more than just a staffing agency—it
     </section>
 
     <!-- Application Form Section -->
-    <section id="application-form">
-        <h2>Application Form</h2>
-        <p>Click the button below to download the application form. Once completed, email it to us at <strong>daradea0425@gmail.com</strong>.</p>
-        <a href="https://pdfhost.io/v/yCmWzTTZe3_DEAform
-            " download>
-            <button>Download Application Form</button>
-        </a>
+   <!-- Application Form Section -->
+<section id="application-form">
+    <h2>Application Form</h2>
+    <p>Click the button below to download the application form. Once completed, email it to us at <strong>daradea0425@gmail.com</strong>.</p>
+    <a href="https://pdfhost.io/v/yCmWzTTZe3_DEAform" download>
+        <button>Download Application Form</button>
+    </a>
 
-        <!-- Form Submission to Email -->
-        <form action="https://formsubmit.co/daradea0425@gmail.com" method="POST">
-            <h3>Submit Your Completed Application</h3>
-            <input type="hidden" name="_subject" value="New Job Application Submission">
-            <input type="hidden" name="_redirect" value="http://yourwebsite.com/thank-you">
+    <!-- Form Submission to Email (Updated for File Uploads) -->
+    <form id="job-application-form" action="https://formsubmit.co/daradea0425@gmail.com" method="POST" enctype="multipart/form-data">
+        <input type="hidden" name="_subject" value="New Job Application Submission">
+        <input type="hidden" name="_captcha" value="false">
+        <input type="hidden" name="_template" value="table">
+        <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html"> <!-- Replace with your thank-you page -->
 
-            <label for="full-name">Full Name:</label>
-            <input type="text" id="full-name" name="full-name" required><br>
+        <label for="full-name">Full Name:</label>
+        <input type="text" id="full-name" name="name" required>
 
-            <label for="email">Email Address:</label>
-            <input type="email" id="email" name="email" required><br>
+        <label for="email">Email Address:</label>
+        <input type="email" id="email" name="email" required>
 
-            <label for="position">Position Applying For:</label>
-            <select id="position" name="position">
-                <option value="recruiter">Recruiter</option>
-                <option value="staffing-coordinator">Staffing Coordinator</option>
-                <option value="human-resources">Human Resources</option>
-                <option value="operations-manager">Operations Manager</option>
-                <option value="other">Other</option>
-            </select><br>
+        <label for="phone">Phone Number:</label>
+        <input type="tel" id="phone" name="phone" required>
 
-            <label for="resume"><strong>Upload Your Application Form</strong></label>
-            <input type="file" id="resume" name="resume" required><br>
+        <label for="position">Position Applying For:</label>
+        <select id="position" name="position" required>
+            <option value="" disabled selected>Select a position</option>
+            <option value="Administrative">Administrative</option>
+            <option value="Clerical">Clerical</option>
+            <option value="Manufacturing">Manufacturing</option>
+            <option value="Distribution">Distribution</option>
+            <option value="Other">Other</option>
+        </select>
 
-            <label for="cover-letter">Cover Letter:</label>
-            <textarea id="cover-letter" name="cover-letter" rows="4" required></textarea><br>
+        <label for="resume">Upload Your Resume (PDF/DOC):</label>
+        <input type="file" id="resume" name="attachment" accept=".pdf,.doc,.docx" required>
 
-            <button type="submit">Submit Application</button>
-        </form>
-    </section>
+        <label for="application">Upload Completed Application Form (PDF):</label>
+        <input type="file" id="application" name="attachment" accept=".pdf" required>
+
+        <label for="message">Additional Notes:</label>
+        <textarea id="message" name="message" rows="4"></textarea>
+
+        <button type="submit" id="submit-btn">Submit Application</button>
+        <div id="form-status"></div>
+    </form>
+</section>
 
     <!-- Contact Section -->
     <section id="contact">
@@ -493,52 +502,39 @@ In summary, Dara Employment Agency, LLC is more than just a staffing agency—it
     </footer>
 
     <script>
-        // Wait for the DOM to be fully loaded
-        document.addEventListener("DOMContentLoaded", function() {
-            
-            // Form submission event listener
-            const form = document.querySelector("form");
-            const feedbackDiv = document.getElementById("contact-feedback");
-            
-            // Create a loading spinner element
-            const spinner = document.createElement("div");
-            spinner.style.display = "none";
-            spinner.innerHTML = "Submitting... Please wait.";
-            feedbackDiv.appendChild(spinner);
+    document.getElementById('job-application-form').addEventListener('submit', function(e) {
+        e.preventDefault();
+        const form = e.target;
+        const submitBtn = document.getElementById('submit-btn');
+        const statusDiv = document.getElementById('form-status');
 
-            form.addEventListener("submit", function(e) {
-                e.preventDefault();  // Prevent the default form submission
-                
-                // Show the loading spinner
-                spinner.style.display = "block";
+        // Disable button to prevent multiple submissions
+        submitBtn.disabled = true;
+        statusDiv.innerHTML = '<p style="color: blue;">Sending your application...</p>';
 
-                const formData = new FormData(form);
+        // Use FormData to handle file uploads
+        const formData = new FormData(form);
 
-                // Use fetch to submit the form asynchronously
-                fetch("https://formsubmit.co/daradea0425@gmail.com", {
-                    method: "POST",
-                    body: formData
-                })
-                .then(response => response.json())
-                .then(data => {
-                    // Hide the spinner
-                    spinner.style.display = "none";
-
-                    // Show the success message
-                    feedbackDiv.innerHTML = "<p>Your message has been sent successfully!. We will contact you bac as soon as possible</p>";
-                    
-                    // Optionally reset the form
-                    form.reset();
-                })
-                .catch(error => {
-                    // Hide the spinner
-                    spinner.style.display = "none";
-                    
-                    // Show the error message
-                    feedbackDiv.innerHTML = "<p>There was an error sending your message. Please try again later.</p>";
-                });
-            });
+        fetch(form.action, {
+            method: 'POST',
+            body: formData
+        })
+        .then(response => {
+            if (response.ok) {
+                statusDiv.innerHTML = '<p style="color: green;">Application submitted successfully!</p>';
+                form.reset();
+            } else {
+                throw new Error('Network response was not ok');
+            }
+        })
+        .catch(error => {
+            statusDiv.innerHTML = '<p style="color: red;">Error submitting application. Please email us directly at daradea0425@gmail.com</p>';
+            console.error('Error:', error);
+        })
+        .finally(() => {
+            submitBtn.disabled = false;
         });
-    </script>
+    });
+</script>
 </body>
 </html>
