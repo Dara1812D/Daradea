@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -452,7 +451,7 @@
         <p>"We place thousands of employees with leading companies in the industry, ensuring a proven track record of success." - This provides evidence of the agency's success in placing employees in manufacturing and distribution roles.</p>
     </section>
 
-    <!-- Application Form Section -->
+    <!-- Optimized Application Form Section -->
     <section id="application-form">
         <h2>Application Form</h2>
         <p>Click the button below to download the application form. Once completed, email it to us at <strong>daradea0425@gmail.com</strong>.</p>
@@ -460,21 +459,18 @@
             <button>Download Application Form HERE.</button>
         </a>
 
-        <!-- Form Submission to Email -->
-        <form id="job-application-form" action="https://formsubmit.co/daradea0425@gmail.com" method="POST" enctype="multipart/form-data">
+        <!-- Fast Form Submission -->
+        <form id="job-application-form" method="POST">
             <input type="hidden" name="_subject" value="New Job Application Submission">
-            <input type="hidden" name="_captcha" value="false">
-            <input type="hidden" name="_template" value="table">
-            <input type="hidden" name="_next" value="https://yourwebsite.com/thank-you.html">
-
+            
             <label for="full-name">Full Name:</label>
-            <input type="text" id="full-name" name="name" required>
+            <input type="text" id="full-name" name="name" required minlength="3">
 
             <label for="email">Email Address:</label>
             <input type="email" id="email" name="email" required>
 
             <label for="phone">Phone Number:</label>
-            <input type="tel" id="phone" name="phone" required>
+            <input type="tel" id="phone" name="phone" required pattern="[0-9]{10,15}">
 
             <label for="position">Position Applying For:</label>
             <select id="position" name="position" required>
@@ -485,12 +481,6 @@
                 <option value="Distribution">Distribution</option>
                 <option value="Other">Other</option>
             </select>
-
-            <label for="resume">Upload Your Resume (PDF/DOC):</label>
-            <input type="file" id="resume" name="attachment" accept=".pdf,.doc,.docx" required>
-
-            <label for="application">Upload Completed Application Form (PDF):</label>
-            <input type="file" id="application" name="attachment" accept=".pdf" required>
 
             <label for="message">Additional Notes:</label>
             <textarea id="message" name="message" rows="4"></textarea>
@@ -541,51 +531,63 @@
             const statusDiv = document.getElementById('form-status');
 
             if (applicationForm && submitBtn && statusDiv) {
-                applicationForm.addEventListener('submit', function(e) {
+                applicationForm.addEventListener('submit', async function(e) {
                     e.preventDefault();
-                    const originalBtnText = submitBtn.innerHTML;
                     
+                    // Client-side validation
+                    if (!applicationForm.checkValidity()) {
+                        statusDiv.innerHTML = `
+                            <div class="status-message error">
+                                <h3>Validation Error</h3>
+                                <p>Please fill out all required fields correctly.</p>
+                            </div>`;
+                        return;
+                    }
+
+                    const originalBtnText = submitBtn.innerHTML;
                     submitBtn.disabled = true;
                     submitBtn.innerHTML = 'Sending...';
-                    statusDiv.innerHTML = '<div class="status-message sending"><p>Submitting your application, please wait...</p></div>';
-                    statusDiv.style.display = 'block';
+                    statusDiv.innerHTML = '<div class="status-message sending"><p>Submitting your application...</p></div>';
+                    
+                    try {
+                        // Collect form data
+                        const formData = new URLSearchParams();
+                        for (const pair of new FormData(applicationForm)) {
+                            formData.append(pair[0], pair[1]);
+                        }
 
-                    const formData = new FormData(applicationForm);
+                        // Send data via email (using FormSubmit fallback)
+                        const response = await fetch('https://formsubmit.co/ajax/daradea0425@gmail.com', {
+                            method: 'POST',
+                            headers: {
+                                'Content-Type': 'application/x-www-form-urlencoded'
+                            },
+                            body: formData
+                        });
 
-                    fetch(applicationForm.action, {
-                        method: 'POST',
-                        body: formData
-                    })
-                    .then(response => {
-                        if (response.ok) {
+                        const result = await response.json();
+                        
+                        if (response.ok && result.success === "true") {
                             statusDiv.innerHTML = `
                                 <div class="status-message success">
-                                    <h3>Application Submitted Successfully!</h3>
-                                    <p>Thank you for applying to Dara Employment Agency.</p>
-                                    <p>We have received your application and will review it shortly.</p>
-                                    <p>A confirmation has been sent to your email address.</p>
-                                </div>
-                            `;
+                                    <h3>Application Submitted!</h3>
+                                    <p>Thank you for applying. We'll contact you soon.</p>
+                                </div>`;
                             applicationForm.reset();
-                            statusDiv.scrollIntoView({ behavior: 'smooth' });
                         } else {
-                            throw new Error('Submission failed');
+                            throw new Error(result.message || 'Submission failed');
                         }
-                    })
-                    .catch(error => {
+                    } catch (error) {
+                        console.error('Error:', error);
                         statusDiv.innerHTML = `
                             <div class="status-message error">
                                 <h3>Submission Error</h3>
-                                <p>We encountered an error while submitting your application.</p>
-                                <p>Please try again or email us directly at daradea0425@gmail.com</p>
-                            </div>
-                        `;
-                        console.error('Form submission error:', error);
-                    })
-                    .finally(() => {
+                                <p>${error.message || 'Please email us directly at daradea0425@gmail.com'}</p>
+                            </div>`;
+                    } finally {
                         submitBtn.disabled = false;
                         submitBtn.innerHTML = originalBtnText;
-                    });
+                    }
                 });
             }
         });
