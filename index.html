@@ -99,6 +99,89 @@
             color: blue;
         }
 
+
+/* Image Split Section Styles */
+.image-split-section {
+    padding: 40px 20px;
+    background-color: #fff;
+    text-align: center;
+}
+
+.image-container {
+    display: flex;
+    max-width: 1200px;
+    margin: 0 auto;
+    gap: 20px;
+}
+
+.left-image, .right-image {
+    flex: 1;
+    overflow: hidden;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+}
+
+.left-image img, .right-image img {
+    width: 100%;
+    height: 350px; /* Fixed height for consistency */
+    object-fit: cover;
+    transition: transform 0.5s ease;
+}
+
+.left-image img:hover, .right-image img:hover {
+    transform: scale(1.05);
+}
+
+.split-caption {
+    font-size: 1.3rem;
+    color: #0033A0;
+    margin: 25px auto 0;
+    max-width: 800px;
+    position: relative;
+    padding: 0 20px;
+}
+
+.split-caption:before {
+    content: "";
+    display: block;
+    width: 100px;
+    height: 3px;
+    background: #B22222;
+    margin: 0 auto 15px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .image-container {
+        flex-direction: column;
+        gap: 15px;
+    }
+    
+    .left-image img, .right-image img {
+        height: 250px;
+    }
+    
+    .split-caption {
+        font-size: 1.1rem;
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+        
+
         #about h3 {
             font-size: 1.8rem;
             color: #0033A0;
@@ -114,6 +197,11 @@
         #about ul li {
             margin-bottom: 10px;
         }
+
+
+
+
+        
 
         /* Services Section */
         #services {
@@ -372,6 +460,37 @@
         </div>
     </section>
 
+<!-- Image Split Section -->
+<div class="image-split-section">
+    <div class="image-container">
+        <div class="left-image">
+            <img src="https://img.freepik.com/premium-vector/manufacturing-technology-concept-with-machine-equipment-flat-design-vector-illustration_493806-13752.jpg" alt="Our Team Working">
+        </div>
+        <div class="right-image">
+            <img src="https://media.istockphoto.com/id/1147251179/vector/warehouse-workers-set.jpg?s=612x612&w=0&k=20&c=ad7H_47hdKxQWpbJpY1gQDCCKeLQgA_-1mA4i3Z2KaA=" alt="Office Environment">
+        </div>
+    </div>
+    <p class="split-caption">Two decades of excellence in staffing solutions</p>
+</div>
+
+<!-- Your existing About section -->
+<section id="about">
+    <h2>About Dara Employment Agency, LLC</h2>
+    ...
+</section>
+
+
+
+
+
+
+
+
+
+
+
+
+    
     <!-- About Us Section -->
     <section id="about">
         <h2>About Dara Employment Agency, LLC</h2>
@@ -422,7 +541,7 @@
         <h2>Our Services</h2>
 
         <h3>Employer of Record (EOR) Services</h3>
-        <p>"With Dara Employment Agency LLC's Employer of Record Services, we manage the entire process from start to finish: evaluations, project overviews, invoicing, payment processing, and evaluating compliance for your independent talent." - This highlights the comprehensive nature of their EOR services, covering all aspects of managing independent talent.</p>
+        <p>"With Dara Employment Agency, LLC's Employer of Record Services, we manage the entire process from start to finish: evaluations, project overviews, invoicing, payment processing, and evaluating compliance for your independent talent." - This highlights the comprehensive nature of their EOR services, covering all aspects of managing independent talent.</p>
         <p>"As a complement to our Employer of Record services, we enable you to engage all types of workers." - This emphasizes that their EOR services are designed to support the engagement of various types of workers.</p>
         <p>"We'll review various factors and provide recommendations to assess risk factors to assist you in determining which part of your workforce is best suited for engagement." - This highlights their expertise in assessing risk and providing guidance on how to best engage different segments of the workforce.</p>
         <p>"Our compliance team supports you at every step, clarifying and establishing best practices around how your organization utilizes various types of contingent workers." - This emphasizes the ongoing support provided by their compliance team, ensuring best practices are followed.</p>
