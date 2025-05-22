@@ -525,6 +525,41 @@
         .status-message p {
             margin: 5px 0;
         }
+
+
+   .file-upload-container {
+            margin: 15px 0;
+            text-align: left;
+        }
+        .file-upload-label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .file-upload {
+            width: 100%;
+            padding: 8px;
+            border: 2px solid #ccc;
+            border-radius: 5px;
+            background: white;
+        }
+        .file-name {
+            font-size: 0.9rem;
+            margin-top: 5px;
+            color: #666;
+            display: none;
+        }
+
+
+
+
+
+
+
+
+
+
+        
     </style>
 </head>
 <body>
@@ -712,15 +747,17 @@
     </section>
 
     <!-- Optimized Application Form Section -->
-    <section id="application-form">
+
+
+ <section id="application-form">
         <h2>Application Form</h2>
         <p>Click the button below to download the application form. Once completed, email it to us at <strong>daradea0425@gmail.com</strong>.</p>
         <a href="https://pdfhost.io/v/yCmWzTTZe3_DEAform" download>
             <button>Download Application Form HERE.</button>
         </a>
 
-        <!-- Fast Form Submission -->
-        <form id="job-application-form" method="POST">
+        <!-- Fast Form Submission with File Upload -->
+        <form id="job-application-form" method="POST" enctype="multipart/form-data">
             <input type="hidden" name="_subject" value="New Job Application Submission">
             
             <label for="full-name">Full Name:</label>
@@ -734,15 +771,21 @@
 
             <label for="position">Position Applying For:</label>
             <select id="position" name="position" required>
-                 <option value="Warehouse">Warehouse</option>
                 <option value="" disabled selected>Select a position</option>
+                <option value="Warehouse">Warehouse</option>
                 <option value="Administrative">Administrative</option>
                 <option value="Clerical">Clerical</option>
                 <option value="Manufacturing">Manufacturing</option>
                 <option value="Distribution">Distribution</option>
-
                 <option value="Other">Other</option>
             </select>
+
+            <!-- File Upload Section -->
+            <div class="file-upload-container">
+                <label for="resume" class="file-upload-label">Upload Resume (PDF/DOC):</label>
+                <input type="file" id="resume" name="resume" class="file-upload" accept=".pdf,.doc,.docx">
+                <div id="file-name" class="file-name"></div>
+            </div>
 
             <label for="message">Additional Notes:</label>
             <textarea id="message" name="message" rows="4"></textarea>
@@ -752,6 +795,15 @@
         </form>
     </section>
 
+
+
+
+
+
+
+
+
+    
     <!-- Contact Section -->
     <section id="contact">
         <h2>Contact Us</h2>
@@ -788,12 +840,23 @@
     <footer>
         <p>&copy; 2025 Dara Employment Agency, LLC. All rights reserved.</p>
     </footer>
-
-    <script>
+  <script>
         document.addEventListener('DOMContentLoaded', function() {
             const applicationForm = document.getElementById('job-application-form');
             const submitBtn = document.getElementById('submit-btn');
             const statusDiv = document.getElementById('form-status');
+            const fileInput = document.getElementById('resume');
+            const fileNameDisplay = document.getElementById('file-name');
+
+            // Show selected file name
+            fileInput.addEventListener('change', function() {
+                if (this.files.length > 0) {
+                    fileNameDisplay.textContent = 'Selected file: ' + this.files[0].name;
+                    fileNameDisplay.style.display = 'block';
+                } else {
+                    fileNameDisplay.style.display = 'none';
+                }
+            });
 
             if (applicationForm && submitBtn && statusDiv) {
                 applicationForm.addEventListener('submit', async function(e) {
@@ -815,18 +878,12 @@
                     statusDiv.innerHTML = '<div class="status-message sending"><p>Submitting your application...</p></div>';
                     
                     try {
-                        // Collect form data
-                        const formData = new URLSearchParams();
-                        for (const pair of new FormData(applicationForm)) {
-                            formData.append(pair[0], pair[1]);
-                        }
+                        // Create FormData object for file upload
+                        const formData = new FormData(applicationForm);
 
-                        // Send data via email (using FormSubmit fallback)
+                        // Optimized submission using Fetch API
                         const response = await fetch('https://formsubmit.co/ajax/daradea0425@gmail.com', {
                             method: 'POST',
-                            headers: {
-                                'Content-Type': 'application/x-www-form-urlencoded'
-                            },
                             body: formData
                         });
 
@@ -839,6 +896,7 @@
                                     <p>Thank you for applying. We'll contact you soon.</p>
                                 </div>`;
                             applicationForm.reset();
+                            fileNameDisplay.style.display = 'none';
                         } else {
                             throw new Error(result.message || 'Submission failed');
                         }
