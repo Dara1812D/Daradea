@@ -95,10 +95,10 @@
         .btn {
             display: inline-block;
             padding: 12px 30px;
-            background: var(--primary-blue);
+            background: red;
             color: var(--white);
             border: none;
-            border-radius: 4px;
+            border-radius: 20px;
             cursor: pointer;
             font-size: 16px;
             font-weight: 600;
@@ -108,20 +108,24 @@
         }
 
         .btn:hover {
-            background: var(--primary-red);
+            background: blue;
             transform: translateY(-3px);
             box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            color:white;
         }
 
         .btn-outline {
-            background: transparent;
+            background: blue;
+            color:white;
+            border-radius:20px;
             border: 2px solid var(--primary-blue);
-            color: var(--primary-blue);
+        
         }
 
         .btn-outline:hover {
-            background: var(--primary-blue);
-            color: var(--white);
+            background: red;
+            color:white;
+            
         }
 
         /* Header Styles */
@@ -204,13 +208,71 @@
         }
 
         /* Hero Section */
-        .hero {
-            background: linear-gradient(135deg, var(--primary-blue), var(--secondary-blue));
-            color: var(--white);
-            padding: 180px 0 100px;
-            text-align: center;
-            position: relative;
-            overflow: hidden;
+     /* Hero Section - Video Background Version */
+.hero {
+   position: relative;
+    height: 100vh;
+    min-height: 600px;
+    overflow: hidden;
+}
+/* Video Background (pure decoration) */
+.video-bg {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+}
+
+.video-bg video {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+}
+
+
+.video-overlay {
+   
+     position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 51, 160, 0.5); /* Blue tint overlay */
+    z-index: 1;
+}
+        .hero-container {
+    position: relative;
+    height: 100%;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.hero-content {
+max-width: 800px;
+    padding: 0 20px;
+    text-align: center;
+    color: white;
+}
+
+
+
+/* Enhance text visibility */
+.hero h1 {
+    text-shadow: 1px 1px 4px rgba(0,0,0,0.4);
+}
+
+.hero p {
+    text-shadow: 1px 1px 3px rgba(0,0,0,0.3);
+    margin: 0 auto 30px;
+    max-width: 600px;
+}
+
+        
+/* Keep all your existing hero content styles */
         }
 
         .hero:before {
@@ -524,6 +586,21 @@
     .contact-container {
         grid-template-columns: 1fr; /* Stack on mobile */
     }}
+        @media (max-width: 768px) {
+    .hero {
+        height: auto;
+        min-height: 100vh;
+    }
+    
+    .hero-content {
+        padding: 120px 20px 80px;
+    }
+    
+    /* Optional: Stronger overlay on mobile */
+    .video-overlay {
+        background: rgba(0, 51, 160, 0.6);
+    }
+}
 
         /* Footer */
         footer {
@@ -926,6 +1003,22 @@
 
     <!-- Hero Section -->
     <section class="hero" id="home">
+         <div class="video-bg">
+        <video autoplay loop muted playsinline>
+            <source src="7049943-hd_1920_1080_30fps.mp4" type="video/mp4">
+            <!-- Fallback image if video doesn't load -->
+            <img src="assets/images/hero-fallback.jpg" alt="Office Background">
+        </video>
+    </div>
+   <div class="video-overlay"></div>
+    </div>
+        <div class="hero-container">
+
+
+
+
+
+        
         <div class="hero-content">
            <h1 class="typewriter">
   <span class="typewriter-line">Strategic Staffing Solutions</span>
@@ -934,7 +1027,7 @@
             <p>Dara Employment Agency connects top talent with leading companies through temporary staffing, direct hire, and comprehensive employer of record services.</p>
             <div class="hero-btns">
                 <a href="#application" class="btn">Apply for Jobs</a>
-                <a href="#contact" class="btn btn-outline">Contact Our Team</a>
+                <a href="#contact" class="btn btn-outline">Contact Us</a>
             </div>
         </div>
     </section>
@@ -1220,7 +1313,7 @@
     <section class="section contact" id="contact">
         <div class="container">
             <div class="section-title">
-                <h2>Contact Our Team</h2>
+                <h2>Contact Us</h2>
                 <p>We're here to answer your questions</p>
             </div>
 
